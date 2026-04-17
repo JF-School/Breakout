@@ -34,11 +34,28 @@ namespace Breakout
         // add List<Brick> bricks
         public void Update(Rectangle window, Paddle paddle, List<Brick> bricks)
         {
-            _rectangle.Offset(_speed);
+            //_rectangle.Offset(_speed);
+
+            //_speed.X += (int)_speed.Y;
+            //_speed.Y += (int)_speed.X;
+            // window
             if (_rectangle.Right > window.Width || _rectangle.Left < 0)
                 _speed.X *= -1;
-            if (_rectangle.Intersects(paddle.Rect) || _rectangle.Top < 0)
+            if (_rectangle.Bottom > paddle.Rect.Top || _rectangle.Top < 0)
                 _speed.Y *= -1;
+
+            for (int i = 0; i < bricks.Count; i++)
+            {
+                if (_rectangle.Intersects(bricks[i].Rect))
+                {
+                    if (_rectangle.Bottom > bricks[i].Rect.Top || _rectangle.Top <  bricks[i].Rect.Bottom)
+                        _speed.Y *= -1;
+                    if (_rectangle.Left > bricks[i].Rect.Right || _rectangle.Right < bricks[i].Rect.Left)
+                        _speed.X *= -1;
+                    bricks.RemoveAt(i);
+                }
+            }
+            
 
         }
 

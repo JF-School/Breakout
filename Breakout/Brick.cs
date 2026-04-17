@@ -30,9 +30,9 @@ namespace Breakout
             get { return _rectangle; }
         }
 
-        public void Update()
+        public void Update(List<Brick> bricks, Ball ball)
         {
-
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)

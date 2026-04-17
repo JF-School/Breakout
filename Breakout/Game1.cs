@@ -55,8 +55,25 @@ namespace Breakout
             // paddle size (114, 23)
             paddle = new Paddle(paddleTexture, new Rectangle(343, 400, 114, 23), window);
             // ball size (25, 25)
-            ball = new Ball(ballTexture, new Rectangle(400, 250, 25, 25), new Vector2(2, 2), Color.White);
-            // what's the brick size
+            ball = new Ball(ballTexture, new Rectangle(343, 350, 25, 25), new Vector2(2, 3), Color.White);
+            // what's the brick size (90, 40)
+            bricks = new List<Brick>();
+            for (int i = 0; i < 7; i++)
+            {
+                bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * i), 50, 90, 40), Color.Blue));
+            }
+            for (int j = 0; j < 7; j++)
+            {
+                bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * j), 100, 90, 40), Color.Red));
+            }
+            for (int k = 0; k < 7; k++)
+            {
+                bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * k), 150, 90, 40), Color.Yellow));
+            }
+            for (int l = 0; l < 7; l++)
+            {
+                bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * l), 200, 90, 40), Color.Green));
+            }
         }
 
         protected override void LoadContent()
