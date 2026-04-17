@@ -37,6 +37,10 @@ namespace Breakout
             //_rectangle.Offset(_speed);
 
             //_speed.X += (int)_speed.Y;
+
+
+
+
             //_speed.Y += (int)_speed.X;
             // window
             _rectangle.X += (int)_speed.X;
@@ -45,6 +49,13 @@ namespace Breakout
                 _rectangle.X -= (int)_speed.X;
                 _speed.X *= -1;
             }
+
+
+
+
+
+
+
             _rectangle.Y += (int)_speed.Y;
             if (_rectangle.Bottom > paddle.Rect.Top || _rectangle.Top < 0)
             {
