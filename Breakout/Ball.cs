@@ -39,10 +39,19 @@ namespace Breakout
             //_speed.X += (int)_speed.Y;
             //_speed.Y += (int)_speed.X;
             // window
+            _rectangle.X += (int)_speed.X;
             if (_rectangle.Right > window.Width || _rectangle.Left < 0)
+            {
+                _rectangle.X -= (int)_speed.X;
                 _speed.X *= -1;
+            }
+            _rectangle.Y += (int)_speed.Y;
             if (_rectangle.Bottom > paddle.Rect.Top || _rectangle.Top < 0)
+            {
+                _rectangle.Y -= (int)_speed.Y;
                 _speed.Y *= -1;
+            }
+                
 
             for (int i = 0; i < bricks.Count; i++)
             {
