@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+//using System.Numerics;
 
 namespace Breakout
 {
@@ -58,21 +59,46 @@ namespace Breakout
             ball = new Ball(ballTexture, new Rectangle(343, 350, 25, 25), new Vector2(2, 3), Color.White);
             // what's the brick size (90, 40)
             bricks = new List<Brick>();
-            for (int i = 0; i < 7; i++)
+            //for (int i = 0; i < 7; i++) // red bricks
+            //    bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * i), 30, 90, 20), Color.Red));
+            //for (int j = 0; j < 7; j++) // orange bricks
+            //    bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * j), 55, 90, 20), Color.Orange));
+            //for (int k = 0; k < 7; k++) // yellow bricks
+            //    bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * k), 80, 90, 20), Color.Yellow));
+            //for (int l = 0; l < 7; l++) // green
+            //    bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * l), 105, 90, 20), Color.Green));
+            //for (int m = 0; m < 7; m++)
+            //    bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * m), 130, 90, 20), Color.Blue));
+            for (int i = 0; i < 49; i++)
             {
-                bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * i), 50, 90, 40), Color.Blue));
-            }
-            for (int j = 0; j < 7; j++)
-            {
-                bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * j), 100, 90, 40), Color.Red));
-            }
-            for (int k = 0; k < 7; k++)
-            {
-                bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * k), 150, 90, 40), Color.Yellow));
-            }
-            for (int l = 0; l < 7; l++)
-            {
-                bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * l), 200, 90, 40), Color.Green));
+                int x = i % 7;
+                int y = 25 * (i / 7 % 7);
+                Color color = Color.White;
+                switch (i / 7 % 7)
+                {
+                    case 0:
+                        color = Color.Red;
+                        break;
+                    case 1:
+                        color = Color.Orange;
+                        break;
+                    case 2:
+                        color = Color.Yellow;
+                        break;
+                    case 3:
+                        color = Color.Green;
+                        break;
+                    case 4:
+                        color = Color.Blue;
+                        break;
+                    case 5:
+                        color = Color.Magenta;
+                        break;
+                    case 6:
+                        color = Color.Violet;
+                        break;
+                }
+                bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * x), 30 + y, 90, 20), color));
             }
         }
 

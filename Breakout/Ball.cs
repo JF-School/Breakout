@@ -35,13 +35,6 @@ namespace Breakout
         public void Update(Rectangle window, Paddle paddle, List<Brick> bricks)
         {
             //_rectangle.Offset(_speed);
-
-            //_speed.X += (int)_speed.Y;
-
-
-
-
-            //_speed.Y += (int)_speed.X;
             // window
             _rectangle.X += (int)_speed.X;
             if (_rectangle.Right > window.Width || _rectangle.Left < 0)
@@ -50,18 +43,18 @@ namespace Breakout
                 _speed.X *= -1;
             }
 
-
-
-
-
-
-
             _rectangle.Y += (int)_speed.Y;
-            if (_rectangle.Bottom > paddle.Rect.Top || _rectangle.Top < 0)
+            if (_rectangle.Intersects(paddle.Rect) || _rectangle.Top < 0)
             {
+                _rectangle.Y -= 1;
                 _rectangle.Y -= (int)_speed.Y;
                 _speed.Y *= -1;
             }
+            //if (_rectangle.Bottom > paddle.Rect.Top || _rectangle.Top < 0)
+            //{
+            //    _rectangle.Y -= (int)_speed.Y;
+            //    _speed.Y *= -1;
+            //}
                 
 
             for (int i = 0; i < bricks.Count; i++)
