@@ -19,6 +19,7 @@ namespace Breakout
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+
         Rectangle window;
         Screen screen;
 
@@ -31,6 +32,9 @@ namespace Breakout
         Paddle paddle;
         List<Brick> bricks;
         Ball ball;
+
+        int round;
+        bool gameEnd, ballReleased;
 
         public Game1()
         {
@@ -48,6 +52,8 @@ namespace Breakout
             _graphics.ApplyChanges();
 
             screen = Screen.Game;
+            round = 1;
+            gameEnd = false;
 
             // TODO: Add your initialization logic here
 
@@ -56,7 +62,7 @@ namespace Breakout
             // paddle size (114, 23)
             paddle = new Paddle(paddleTexture, new Rectangle(343, 400, 114, 23), window);
             // ball size (25, 25)
-            ball = new Ball(ballTexture, new Rectangle(343, 350, 25, 25), new Vector2(2, 3), Color.White);
+            ball = new Ball(ballTexture, new Rectangle(368, 350, 25, 25), new Vector2(2, 3), Color.White);
             // what's the brick size (90, 40)
             bricks = new List<Brick>();
             //for (int i = 0; i < 7; i++) // red bricks
@@ -92,10 +98,10 @@ namespace Breakout
                         color = Color.Blue;
                         break;
                     case 5:
-                        color = Color.Magenta;
+                        color = Color.Purple;
                         break;
                     case 6:
-                        color = Color.Violet;
+                        color = Color.HotPink;
                         break;
                 }
                 bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * x), 30 + y, 90, 20), color));
@@ -130,6 +136,8 @@ namespace Breakout
                     // all the classes lol, and maybe scorekeeping
                     paddle.Update(keyboardState, window);
                     ball.Update(window, paddle, bricks);
+                    if (gameEnd)
+                        screen = Screen.End;
                     break;
                 case Screen.End:
                     // also buttons

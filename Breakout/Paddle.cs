@@ -30,15 +30,20 @@ namespace Breakout
             get { return _rectangle; }
         }
 
+        public Vector2 Speed
+        {
+            get { return _speed; }
+        }
+
         public void Update(KeyboardState keyboardState, Rectangle window)
         {
             keyboardState = Keyboard.GetState();
             _speed = Vector2.Zero;
 
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
-                _speed.X -= 4;
+                _speed.X -= 5;
             if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
-                _speed.X += 4;
+                _speed.X += 5;
 
 
             if (_rectangle.Right > window.Width)
