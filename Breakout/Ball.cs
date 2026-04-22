@@ -53,32 +53,47 @@ namespace Breakout
                 ballFalls += 1;
             }
 
+
+            // ball Vector2(3, 3)
+            _rectangle.X += (int)_speed.X;
             _rectangle.Y += (int)_speed.Y;
-            if (_rectangle.Intersects(paddle.Rect) || _rectangle.Top < 0)
+            if (_rectangle.Intersects(paddle.Rect))
             {
-                //if (_speed.Y > 0 && paddle.Speed.X > 0)
-                //{
-                //    _rectangle.Y -= (int)_speed.Y;
-                //    _speed.Y *= -2;
-                //}
-                //else if ((_speed.Y < 0 && paddle.Speed.X > 0) || _speed.Y > 0 && paddle.Speed.Y < 0)
-                //{
-                //    _rectangle.Y -= (int)_speed.Y;
-                //    _speed.Y *= -0.5f;
-                //}
-                //else
-                //{
-                //    _rectangle.Y -= 1;
-                //    _rectangle.Y -= (int)_speed.Y;
-                //    _speed.Y *= -1;
-                //}
+                int paddleLeft = (paddle.Rect.Center.X) / 2;
+                int paddleRight = (paddle.Rect.Center.X + paddle.Rect.Right) / 2;
+                if (_rectangle.Center.X < paddleLeft)
+                {
+                    _rectangle.X -= (int)_speed.X;
+                    _rectangle.Y -= (int)_speed.Y;
+                    _speed.X = -3;
+                    _speed.Y = -2;
+                }
+                if (_rectangle.Center.X > paddleLeft || _rectangle.Center.X < paddleRight)
+                {
+                    _rectangle.X -= (int)_speed.X;
+                    _rectangle.Y -= (int)_speed.Y;
+                    _speed.X = -2;
+                    _speed.Y = -2;
+                }
+                if (_rectangle.Center.X > paddleRight)
+                {
+                    _rectangle.X -= (int)_speed.X;
+                    _rectangle.Y -= (int)_speed.Y;
+                    _speed.X = 2;
+                    _speed.Y = -3;
+                }
                 
-                _rectangle.Y -= 1;
-                _rectangle.Y -= (int)_speed.Y;
-                _speed.Y *= -1;
+                //_rectangle.Y -= 1;
+                //_rectangle.Y -= (int)_speed.Y;
+                //_speed.Y *= -1;
 
             }
-                
+            
+            if (_rectangle.Top < 0)
+            {
+                _rectangle.Y -= (int)_speed.Y;
+                _speed.Y *= -1;
+            }
 
             for (int i = 0; i < bricks.Count; i++)
             {
