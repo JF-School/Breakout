@@ -210,9 +210,10 @@ namespace Breakout
                     ball.Draw(_spriteBatch);
                     foreach (Brick brick in bricks)
                         brick.Draw(_spriteBatch);
+                    // keep at bottom
                     if (hitboxes)
                     {
-                        _spriteBatch.Draw(brickTexture, ballHitbox, Color.Red * 0.5f);
+                        _spriteBatch.Draw(brickTexture, ball.Rect, Color.Red * 0.5f);
                         _spriteBatch.Draw(brickTexture, paddleRectLeft, Color.Red * 0.5f);
                         _spriteBatch.Draw(brickTexture, paddleRectCenter, Color.Orange * 0.5f);
                         _spriteBatch.Draw(brickTexture, paddleRectRight, Color.Yellow * 0.5f);

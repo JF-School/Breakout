@@ -20,6 +20,7 @@ namespace Breakout
         private int ballFalls;
         private bool didBallFall;
 
+
         public Ball(Texture2D texture, Rectangle rectangle, Vector2 speed, Color color)
         {
             _texture = texture;
@@ -27,7 +28,6 @@ namespace Breakout
             _speed = speed;
             _color = color;
             ballFalls = 0;
-            didBallFall = false;
         }
 
         public Rectangle Rect
@@ -49,10 +49,10 @@ namespace Breakout
             }
             if (_rectangle.Bottom > window.Height && ballFalls < 4)
             {
-                didBallFall = true;
                 ballFalls += 1;
             }
 
+            
 
             // ball Vector2(3, 3)
             _rectangle.X += (int)_speed.X;
