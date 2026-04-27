@@ -28,6 +28,7 @@ namespace Breakout
             _speed = speed;
             _color = color;
             ballFalls = 0;
+            didBallFall = false;
         }
 
         public Rectangle Rect
@@ -35,9 +36,20 @@ namespace Breakout
             get { return _rectangle; }
             set { _rectangle = value; }
         }
+
+        public bool BallBool
+        {
+            get { return didBallFall; }
+            set { didBallFall = value; }
+        }
         
+        public int BallFalls
+        {
+            get { return ballFalls; }
+        }
+
         // add List<Brick> bricks
-        public void Update(Rectangle window, Paddle paddle, List<Brick> bricks)
+        public void Update(Rectangle window, Paddle paddle, List<Brick> bricks, List<Brick> destroyedBricks)
         {
             //_rectangle.Offset(_speed);
             // window
@@ -50,6 +62,7 @@ namespace Breakout
             if (_rectangle.Bottom > window.Height && ballFalls < 4)
             {
                 ballFalls += 1;
+                didBallFall = true;
             }
 
             
@@ -65,8 +78,8 @@ namespace Breakout
                 {
                     _rectangle.X -= (int)_speed.X;
                     _rectangle.Y -= (int)_speed.Y;
-                    _speed.X = -3;
-                    _speed.Y = -2;
+                    _speed.X = -2;
+                    _speed.Y = -3;
                 }
                 if (_rectangle.Center.X > paddleLeft || _rectangle.Center.X < paddleRight)
                 {
@@ -107,7 +120,10 @@ namespace Breakout
                     {
                         _speed.X *= -1;
                     }
+                    //destroyedBricks.Add(bricks[i]);
                     bricks.RemoveAt(i);
+
+
                         
                 }
             }

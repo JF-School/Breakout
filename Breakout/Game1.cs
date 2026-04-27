@@ -33,6 +33,7 @@ namespace Breakout
 
         Paddle paddle;
         List<Brick> bricks;
+        List<Brick> destroyedBricks;
         Ball ball;
 
         int round;
@@ -78,16 +79,7 @@ namespace Breakout
             ballHitbox = new Rectangle(368, 350, 25, 25);
             // what's the brick size (90, 40)
             bricks = new List<Brick>();
-            //for (int i = 0; i < 7; i++) // red bricks
-            //    bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * i), 30, 90, 20), Color.Red));
-            //for (int j = 0; j < 7; j++) // orange bricks
-            //    bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * j), 55, 90, 20), Color.Orange));
-            //for (int k = 0; k < 7; k++) // yellow bricks
-            //    bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * k), 80, 90, 20), Color.Yellow));
-            //for (int l = 0; l < 7; l++) // green
-            //    bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * l), 105, 90, 20), Color.Green));
-            //for (int m = 0; m < 7; m++)
-            //    bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * m), 130, 90, 20), Color.Blue));
+            destroyedBricks = new List<Brick>();
             for (int i = 0; i < 49; i++)
             {
                 int x = i % 7;
@@ -148,7 +140,7 @@ namespace Breakout
                 case Screen.Game:
                     // all the classes lol, and maybe scorekeeping
                     paddle.Update(keyboardState, window);
-                    ball.Update(window, paddle, bricks);
+                    ball.Update(window, paddle, bricks, destroyedBricks);
                     if (keyboardState.IsKeyDown(Keys.LeftAlt) && prevKeyboardState.IsKeyUp(Keys.LeftAlt))
                     {
                         if (!hitboxes)
@@ -172,6 +164,14 @@ namespace Breakout
                 case Screen.Intro:
                     break;
                 case Screen.Game:
+                    //if (bricks.Count == 0)
+                    //{
+                    //    for (int i = 0; i < destroyedBricks.Count; i++)
+                    //    {
+                    //        bricks.Add(destroyedBricks[i]);
+                    //        //destroyedBricks.RemoveAt(i);
+                    //    }
+                    //}
                     if (hitboxes)
                     {
                         paddleRectLeft.X = paddle.Rect.X;
@@ -194,7 +194,7 @@ namespace Breakout
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
 
@@ -208,8 +208,16 @@ namespace Breakout
                     // background?
                     paddle.Draw(_spriteBatch);
                     ball.Draw(_spriteBatch);
+                    if (ball.BallBool == true && ball.BallFalls < 4)
+                    {
+                        ball.Draw(_spriteBatch);
+                        ball.BallBool = false;
+                    }
+                        
                     foreach (Brick brick in bricks)
                         brick.Draw(_spriteBatch);
+
+
                     // keep at bottom
                     if (hitboxes)
                     {
