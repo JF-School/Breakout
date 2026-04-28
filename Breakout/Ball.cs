@@ -17,8 +17,8 @@ namespace Breakout
         private Rectangle _rectangle;
         private Color _color;
         private Vector2 _speed;
-        private int ballFalls;
-        private bool didBallFall;
+        private int ballResets, ballLives, score;
+        private bool didBallFall, hitBrick;
 
 
         public Ball(Texture2D texture, Rectangle rectangle, Vector2 speed, Color color)
@@ -27,8 +27,9 @@ namespace Breakout
             _rectangle = rectangle;
             _speed = speed;
             _color = color;
-            ballFalls = 0;
+            ballLives = 3;
             didBallFall = false;
+            hitBrick = false;
         }
 
         public Rectangle Rect
@@ -37,39 +38,131 @@ namespace Breakout
             set { _rectangle = value; }
         }
 
+        public Vector2 Speed
+        {
+            get { return _speed; }
+        }
+
         public bool BallBool
         {
             get { return didBallFall; }
             set { didBallFall = value; }
         }
         
-        public int BallFalls
+        public int Lives
         {
-            get { return ballFalls; }
+            get { return ballLives; }
+            set { ballLives = value;}
         }
 
-        // add List<Brick> bricks
-        public void Update(Rectangle window, Paddle paddle, List<Brick> bricks, List<Brick> destroyedBricks)
+        public int Score
         {
+            get { return score; }
+        }
+
+        public void ResetLocation(Paddle paddle)
+        {
+            _rectangle.X = paddle.Rect.Center.X;
+            _rectangle.Y = paddle.Rect.Y - 50;
+        }
+
+        //public void StartBall(KeyboardState keyboardState, KeyboardState prevKeyboardState, Paddle paddle)
+        //{
+        //    _rectangle.X = paddle.Rect.Center.X;
+        //    _rectangle.Y = paddle.Rect.Y - 35;
+        //    if (keyboardState.IsKeyDown(Keys.W) && prevKeyboardState.IsKeyUp(Keys.W) || keyboardState.IsKeyDown(Keys.Up) && prevKeyboardState.IsKeyUp(Keys.Up))
+        //    {
+        //        _rectangle.X += (int)_speed.X;
+        //        _speed.X = -2;
+        //        _rectangle.Y += (int)_speed.Y;
+        //        _speed.Y = -2;
+        //    }
+        //}
+
+        // add List<Brick> bricks
+        public void Update(Rectangle window, Paddle paddle, List<Brick> bricks)
+        {
+
             //_rectangle.Offset(_speed);
-            // window
+            // Horizontal Movement
             _rectangle.X += (int)_speed.X;
+
+            // Keep in window
             if (_rectangle.Right > window.Width || _rectangle.Left < 0)
             {
                 _rectangle.X -= (int)_speed.X;
                 _speed.X *= -1;
             }
-            if (_rectangle.Bottom > window.Height && ballFalls < 4)
+            if (_rectangle.Right > window.Width + 1 || _rectangle.Left < -1)
             {
-                ballFalls += 1;
-                didBallFall = true;
+                ResetLocation(paddle);
             }
 
-            
+            ////Hits Side of Paddle
+            //if (_rectangle.Intersects(paddle.Rect))
+            //{
+            //    _speed.X *= -1;
+            //    _rectangle.X -= (int)_speed.X;
 
+            //}
+
+            // Hitting a brick(s)
+            hitBrick = false;
+            for (int i = 0; i < bricks.Count; i++)
+            {
+                if (_rectangle.Intersects(bricks[i].Rect))
+                {
+                    hitBrick = true;
+                    bricks.RemoveAt(i);
+                    score += 50;
+                    i--;
+                }
+            }
+            if (hitBrick)
+            {
+                _speed.X *= -1;
+            }
+
+
+
+            // Vertical Movement
             // ball Vector2(3, 3)
-            _rectangle.X += (int)_speed.X;
             _rectangle.Y += (int)_speed.Y;
+
+            // Keep on screen
+            if (_rectangle.Top < 0)
+            {
+                _rectangle.Y -= (int)_speed.Y;
+                _speed.Y *= -1;
+            }
+            // falls out of window
+            if (_rectangle.Bottom > window.Height && ballLives != 0)
+            {
+                ResetLocation(paddle);
+                ballLives--;
+                _speed.Y *= -1;
+            }
+
+            // more bricks
+            hitBrick = false;
+            for (int i = 0; i < bricks.Count; i++)
+            {
+                if (_rectangle.Intersects(bricks[i].Rect))
+                {
+                    hitBrick = true;
+                    score += 50;
+                    bricks.RemoveAt(i);
+                    i--;
+                }
+                
+            }
+            if (hitBrick)
+            {
+                _speed.Y *= -1;
+            }
+
+            // Resolve Paddle Collision
+
             if (_rectangle.Intersects(paddle.Rect))
             {
                 int paddleLeft = (paddle.Rect.Center.X) / 2;
@@ -78,21 +171,21 @@ namespace Breakout
                 {
                     _rectangle.X -= (int)_speed.X;
                     _rectangle.Y -= (int)_speed.Y;
-                    _speed.X = -2;
-                    _speed.Y = -3;
+                    _speed.X = -3;
+                    _speed.Y = -4;
                 }
                 if (_rectangle.Center.X > paddleLeft || _rectangle.Center.X < paddleRight)
                 {
                     _rectangle.X -= (int)_speed.X;
                     _rectangle.Y -= (int)_speed.Y;
-                    _speed.X = -2;
-                    _speed.Y = -2;
+                    _speed.X = -3;
+                    _speed.Y = -3;
                 }
                 if (_rectangle.Center.X > paddleRight)
                 {
                     _rectangle.X -= (int)_speed.X;
                     _rectangle.Y -= (int)_speed.Y;
-                    _speed.X = 2;
+                    _speed.X = 4;
                     _speed.Y = -3;
                 }
                 
@@ -102,31 +195,11 @@ namespace Breakout
 
             }
             
-            if (_rectangle.Top < 0)
-            {
-                _rectangle.Y -= (int)_speed.Y;
-                _speed.Y *= -1;
-            }
+            // Hit a brick on the sides
+            
+            
+            
 
-            for (int i = 0; i < bricks.Count; i++)
-            {
-                if (_rectangle.Intersects(bricks[i].Rect))
-                {
-                    if (_rectangle.Bottom > bricks[i].Rect.Top || _rectangle.Top <  bricks[i].Rect.Bottom)
-                    {
-                        _speed.Y *= -1;
-                    }   
-                    if (_rectangle.Left > bricks[i].Rect.Right || _rectangle.Right < bricks[i].Rect.Left)
-                    {
-                        _speed.X *= -1;
-                    }
-                    //destroyedBricks.Add(bricks[i]);
-                    bricks.RemoveAt(i);
-
-
-                        
-                }
-            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

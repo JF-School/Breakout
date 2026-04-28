@@ -27,13 +27,12 @@ namespace Breakout
         KeyboardState keyboardState, prevKeyboardState;
 
         Texture2D ballTexture, paddleTexture, brickTexture;
-        Rectangle ballRect, paddleRect, brickRect;
+        SpriteFont ScoreFont;
         Rectangle paddleRectLeft, paddleRectCenter, paddleRectRight, ballHitbox;
         int padLeft, padRight, padCenter;
 
         Paddle paddle;
         List<Brick> bricks;
-        List<Brick> destroyedBricks;
         Ball ball;
 
         int round;
@@ -73,44 +72,13 @@ namespace Breakout
             paddleRectLeft = new Rectangle(343, 400, 38, 23);
             paddleRectCenter = new Rectangle(343, 400, 38, 23);
             paddleRectRight = new Rectangle(343, 400, 38, 23);
-            // ball size (25, 25)
-            ball = new Ball(ballTexture, new Rectangle(368, 350, 25, 25), new Vector2(2, 2), Color.White);
+            // ball size (25, 25) // 368, 350
+            ball = new Ball(ballTexture, new Rectangle(paddle.Rect.Center.X, paddle.Rect.Y - 50, 25, 25), new Vector2(2, 2), Color.White);
 
             ballHitbox = new Rectangle(368, 350, 25, 25);
             // what's the brick size (90, 40)
             bricks = new List<Brick>();
-            destroyedBricks = new List<Brick>();
-            for (int i = 0; i < 49; i++)
-            {
-                int x = i % 7;
-                int y = 25 * (i / 7 % 7);
-                Color color = Color.White;
-                switch (i / 7 % 7)
-                {
-                    case 0:
-                        color = Color.Red;
-                        break;
-                    case 1:
-                        color = Color.Orange;
-                        break;
-                    case 2:
-                        color = Color.Yellow;
-                        break;
-                    case 3:
-                        color = Color.Green;
-                        break;
-                    case 4:
-                        color = Color.Blue;
-                        break;
-                    case 5:
-                        color = Color.Purple;
-                        break;
-                    case 6:
-                        color = Color.HotPink;
-                        break;
-                }
-                bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * x), 30 + y, 90, 20), color));
-            }
+            GenerateBricks();
         }
 
         protected override void LoadContent()
@@ -122,6 +90,7 @@ namespace Breakout
             paddleTexture = Content.Load<Texture2D>("Images/paddle");
             brickTexture = Content.Load<Texture2D>("Images/brick");
             ballTexture = Content.Load<Texture2D>("Images/ball");
+            ScoreFont = Content.Load<SpriteFont>("Fonts/ScoreFont");
         }
 
         protected override void Update(GameTime gameTime)
@@ -139,8 +108,16 @@ namespace Breakout
                     break;
                 case Screen.Game:
                     // all the classes lol, and maybe scorekeeping
+                    //if (ball.Speed.X == 0 && ball.Speed.Y == 0)
+                    //{
+                    //    ball.StartBall(keyboardState, prevKeyboardState, paddle);
+                    //}
+                    //else
+                    //{
+                    //    ball.Update(window, paddle, bricks);
+                    //}
+                    ball.Update(window, paddle, bricks);
                     paddle.Update(keyboardState, window);
-                    ball.Update(window, paddle, bricks, destroyedBricks);
                     if (keyboardState.IsKeyDown(Keys.LeftAlt) && prevKeyboardState.IsKeyUp(Keys.LeftAlt))
                     {
                         if (!hitboxes)
@@ -164,14 +141,13 @@ namespace Breakout
                 case Screen.Intro:
                     break;
                 case Screen.Game:
-                    //if (bricks.Count == 0)
-                    //{
-                    //    for (int i = 0; i < destroyedBricks.Count; i++)
-                    //    {
-                    //        bricks.Add(destroyedBricks[i]);
-                    //        //destroyedBricks.RemoveAt(i);
-                    //    }
-                    //}
+                    if (bricks.Count == 0)
+                    {
+                        ball.ResetLocation(paddle);
+                        GenerateBricks();
+                    }
+                    if (ball.Lives == 0)
+                        screen = Screen.End;
                     if (hitboxes)
                     {
                         paddleRectLeft.X = paddle.Rect.X;
@@ -208,16 +184,9 @@ namespace Breakout
                     // background?
                     paddle.Draw(_spriteBatch);
                     ball.Draw(_spriteBatch);
-                    if (ball.BallBool == true && ball.BallFalls < 4)
-                    {
-                        ball.Draw(_spriteBatch);
-                        ball.BallBool = false;
-                    }
-                        
                     foreach (Brick brick in bricks)
                         brick.Draw(_spriteBatch);
-
-
+                    _spriteBatch.DrawString(ScoreFont, $"Score: {ball.Score}", new Vector2(0, 0), Color.White);
                     // keep at bottom
                     if (hitboxes)
                     {
@@ -235,5 +204,44 @@ namespace Breakout
 
             base.Draw(gameTime);
         }
+
+        public void GenerateBricks()
+        {
+            bricks = new List<Brick>();
+            for (int i = 0; i < 49; i++)
+            {
+                int x = i % 7;
+                int y = 25 * (i / 7 % 7);
+                Color color = Color.White;
+                switch (i / 7 % 7)
+                {
+                    case 0:
+                        color = Color.Red;
+                        break;
+                    case 1:
+                        color = Color.Orange;
+                        break;
+                    case 2:
+                        color = Color.Yellow;
+                        break;
+                    case 3:
+                        color = Color.Green;
+                        break;
+                    case 4:
+                        color = Color.Blue;
+                        break;
+                    case 5:
+                        color = Color.Purple;
+                        break;
+                    case 6:
+                        color = Color.HotPink;
+                        break;
+                }
+                bricks.Add(new Brick(brickTexture, new Rectangle(50 + (100 * x), 30 + y, 90, 20), color));
+            }
+
+
+        }
+
     }
 }
