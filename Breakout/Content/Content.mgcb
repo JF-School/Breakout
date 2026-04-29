@@ -23,6 +23,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/ScoreFont.spritefont
 
+#begin Images/atariBackground.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/atariBackground.jpg
+
 #begin Images/ball.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -34,6 +46,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/ball.png
+
+#begin Images/breakoutLogo.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/breakoutLogo.png
 
 #begin Images/brick.png
 /importer:TextureImporter

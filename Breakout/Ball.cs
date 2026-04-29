@@ -28,7 +28,7 @@ namespace Breakout
             _speed = speed;
             _color = color;
             ballLives = 3;
-            didBallFall = false;
+            didBallFall = true;
             hitBrick = false;
         }
 
@@ -60,27 +60,49 @@ namespace Breakout
             get { return score; }
         }
 
+        public void BallState(Rectangle window, Paddle paddle, List<Brick> bricks, KeyboardState keyboardState)
+        {
+            //do
+            //{
+            //    BallLaunch(keyboardState, paddle);
+            //} while (didBallFall == true);
+            //do
+            //{
+            //    BallMovement(window, paddle, bricks);
+            //} while (didBallFall == false);
+
+            if (didBallFall)
+                BallLaunch(keyboardState, paddle);
+            else
+                BallMovement(window, paddle, bricks);
+        }
+
         public void ResetLocation(Paddle paddle)
         {
-            _rectangle.X = paddle.Rect.Center.X;
+            _rectangle.X = paddle.Rect.Center.X - 12;
             _rectangle.Y = paddle.Rect.Y - 50;
         }
 
-        //public void StartBall(KeyboardState keyboardState, KeyboardState prevKeyboardState, Paddle paddle)
-        //{
-        //    _rectangle.X = paddle.Rect.Center.X;
-        //    _rectangle.Y = paddle.Rect.Y - 35;
-        //    if (keyboardState.IsKeyDown(Keys.W) && prevKeyboardState.IsKeyUp(Keys.W) || keyboardState.IsKeyDown(Keys.Up) && prevKeyboardState.IsKeyUp(Keys.Up))
-        //    {
-        //        _rectangle.X += (int)_speed.X;
-        //        _speed.X = -2;
-        //        _rectangle.Y += (int)_speed.Y;
-        //        _speed.Y = -2;
-        //    }
-        //}
+        public void BallLaunch(KeyboardState keyboardState, Paddle paddle)
+        {
+            if (didBallFall)
+            {
+                ResetLocation(paddle);
+                _speed.X *= 0;
+                _speed.Y *= 0;
+                if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+                {
+                    _rectangle.X -= (int)_speed.X;
+                    _rectangle.Y -= (int)_speed.Y;
+                    //_speed.X = -3;
+                    _speed.Y = -5;
+                    didBallFall = false;
+                }
+            }
+        }
 
         // add List<Brick> bricks
-        public void Update(Rectangle window, Paddle paddle, List<Brick> bricks)
+        public void BallMovement(Rectangle window, Paddle paddle, List<Brick> bricks)
         {
 
             //_rectangle.Offset(_speed);
@@ -138,9 +160,8 @@ namespace Breakout
             // falls out of window
             if (_rectangle.Bottom > window.Height && ballLives != 0)
             {
-                ResetLocation(paddle);
+                didBallFall = true;
                 ballLives--;
-                _speed.Y *= -1;
             }
 
             // more bricks
@@ -196,10 +217,6 @@ namespace Breakout
             }
             
             // Hit a brick on the sides
-            
-            
-            
-
         }
 
         public void Draw(SpriteBatch spriteBatch)

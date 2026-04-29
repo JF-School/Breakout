@@ -26,7 +26,8 @@ namespace Breakout
         MouseState mouseState, prevMouseState;
         KeyboardState keyboardState, prevKeyboardState;
 
-        Texture2D ballTexture, paddleTexture, brickTexture;
+        Texture2D ballTexture, paddleTexture, brickTexture, introBack;
+        Texture2D logoTexture;
         SpriteFont ScoreFont;
         Rectangle paddleRectLeft, paddleRectCenter, paddleRectRight, ballHitbox;
         int padLeft, padRight, padCenter;
@@ -54,7 +55,7 @@ namespace Breakout
             _graphics.PreferredBackBufferHeight = window.Height;
             _graphics.ApplyChanges();
 
-            screen = Screen.Game;
+            screen = Screen.Intro;
             round = 1;
             gameEnd = false;
             hitboxes = false;
@@ -87,6 +88,9 @@ namespace Breakout
 
             // TODO: use this.Content to load your game content here
 
+            introBack = Content.Load<Texture2D>("Images/atariBackground");
+            logoTexture = Content.Load<Texture2D>("Images/breakoutLogo");
+
             paddleTexture = Content.Load<Texture2D>("Images/paddle");
             brickTexture = Content.Load<Texture2D>("Images/brick");
             ballTexture = Content.Load<Texture2D>("Images/ball");
@@ -116,7 +120,7 @@ namespace Breakout
                     //{
                     //    ball.Update(window, paddle, bricks);
                     //}
-                    ball.Update(window, paddle, bricks);
+                    ball.BallState(window, paddle, bricks, keyboardState);
                     paddle.Update(keyboardState, window);
                     if (keyboardState.IsKeyDown(Keys.LeftAlt) && prevKeyboardState.IsKeyUp(Keys.LeftAlt))
                     {
@@ -143,8 +147,9 @@ namespace Breakout
                 case Screen.Game:
                     if (bricks.Count == 0)
                     {
-                        ball.ResetLocation(paddle);
+                        ball.BallBool = true; ;
                         GenerateBricks();
+                        round++;
                     }
                     if (ball.Lives == 0)
                         screen = Screen.End;
@@ -179,14 +184,20 @@ namespace Breakout
             {
                 case Screen.Intro:
                     // put stuff here btw
+                    _spriteBatch.Draw(introBack, window, Color.White);
                     break;
                 case Screen.Game:
-                    // background?
+                    // background? no
                     paddle.Draw(_spriteBatch);
                     ball.Draw(_spriteBatch);
                     foreach (Brick brick in bricks)
                         brick.Draw(_spriteBatch);
                     _spriteBatch.DrawString(ScoreFont, $"Score: {ball.Score}", new Vector2(0, 0), Color.White);
+                    _spriteBatch.DrawString(ScoreFont, $"Round: {round}", new Vector2(350, 0), Color.White);
+                    if (ball.Lives > 1)
+                        _spriteBatch.DrawString(ScoreFont, $"{ball.Lives} balls left", new Vector2(600, 0), Color.White);
+                    else if (ball.Lives == 1 && ball.Lives > 0)
+                        _spriteBatch.DrawString(ScoreFont, $"{ball.Lives} ball left", new Vector2(600, 0), Color.White);
                     // keep at bottom
                     if (hitboxes)
                     {
