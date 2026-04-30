@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections;
 using System.Collections.Generic;
 //using System.Numerics;
 
@@ -27,7 +28,8 @@ namespace Breakout
         KeyboardState keyboardState, prevKeyboardState;
 
         Texture2D ballTexture, paddleTexture, brickTexture, introBack;
-        Texture2D logoTexture;
+        Texture2D logoTexture, howTexture, playTexture, creditsTexture, backTexture, instructTexture;
+        Rectangle logoRect, howBtn, playBtn, creditsBtn, backBtn;
         SpriteFont ScoreFont;
         Rectangle paddleRectLeft, paddleRectCenter, paddleRectRight, ballHitbox;
         int padLeft, padRight, padCenter;
@@ -36,8 +38,8 @@ namespace Breakout
         List<Brick> bricks;
         Ball ball;
 
-        int round;
-        bool gameEnd, ballReleased;
+        int round, tab;
+        bool gameEnd;
         bool hitboxes;
 
         public Game1()
@@ -57,6 +59,7 @@ namespace Breakout
 
             screen = Screen.Intro;
             round = 1;
+            tab = 0; // tab = 1 = how to play, tab = 2 = credits
             gameEnd = false;
             hitboxes = false;
 
@@ -80,6 +83,13 @@ namespace Breakout
             // what's the brick size (90, 40)
             bricks = new List<Brick>();
             GenerateBricks();
+
+            logoRect = new Rectangle(200, 25, 400, 160);
+            playBtn = new Rectangle(350, 200, 100, 100);
+            howBtn = new Rectangle(460, 200, 100, 100);
+            creditsBtn = new Rectangle(240, 200, 100, 100);
+            backBtn = new Rectangle(10, 10, 50, 50);
+
         }
 
         protected override void LoadContent()
@@ -88,9 +98,16 @@ namespace Breakout
 
             // TODO: use this.Content to load your game content here
 
+            // intro screen
             introBack = Content.Load<Texture2D>("Images/atariBackground");
             logoTexture = Content.Load<Texture2D>("Images/breakoutLogo");
+            playTexture = Content.Load<Texture2D>("Images/playbutton");
+            howTexture = Content.Load<Texture2D>("Images/howbutton");
+            creditsTexture = Content.Load<Texture2D>("Images/creditsbutton");
+            backTexture = Content.Load<Texture2D>("Images/backbutton");
+            instructTexture = Content.Load<Texture2D>("Images/howtoplay");
 
+            // game screen
             paddleTexture = Content.Load<Texture2D>("Images/paddle");
             brickTexture = Content.Load<Texture2D>("Images/brick");
             ballTexture = Content.Load<Texture2D>("Images/ball");
@@ -109,17 +126,20 @@ namespace Breakout
             {
                 case Screen.Intro:
                     // buttons
+                    if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
+                    {
+                        if (playBtn.Contains(mouseState.Position) && tab == 0)
+                            screen = Screen.Game;
+                        if (howBtn.Contains(mouseState.Position) && tab == 0)
+                            tab = 1;
+                        if (creditsBtn.Contains(mouseState.Position) && tab == 0)
+                            tab = 2;
+                        if (backBtn.Contains(mouseState.Position) && tab != 0)
+                            tab = 0;
+                    }
                     break;
                 case Screen.Game:
-                    // all the classes lol, and maybe scorekeeping
-                    //if (ball.Speed.X == 0 && ball.Speed.Y == 0)
-                    //{
-                    //    ball.StartBall(keyboardState, prevKeyboardState, paddle);
-                    //}
-                    //else
-                    //{
-                    //    ball.Update(window, paddle, bricks);
-                    //}
+                    // idk
                     ball.BallState(window, paddle, bricks, keyboardState);
                     paddle.Update(keyboardState, window);
                     if (keyboardState.IsKeyDown(Keys.LeftAlt) && prevKeyboardState.IsKeyUp(Keys.LeftAlt))
@@ -150,6 +170,7 @@ namespace Breakout
                         ball.BallBool = true; ;
                         GenerateBricks();
                         round++;
+                        ball.Lives++;
                     }
                     if (ball.Lives == 0)
                         screen = Screen.End;
@@ -184,7 +205,24 @@ namespace Breakout
             {
                 case Screen.Intro:
                     // put stuff here btw
-                    _spriteBatch.Draw(introBack, window, Color.White);
+                    switch (tab)
+                    {
+                        case 0: // main intro
+                            _spriteBatch.Draw(introBack, window, Color.White);
+                            _spriteBatch.Draw(logoTexture, logoRect, Color.White);
+                            _spriteBatch.Draw(playTexture, playBtn, Color.White);
+                            _spriteBatch.Draw(creditsTexture, creditsBtn, Color.White);
+                            _spriteBatch.Draw(howTexture, howBtn, Color.White);
+                            break;
+                        case 1: // how to play?
+                            _spriteBatch.Draw(instructTexture, window, Color.White);
+                            _spriteBatch.Draw(backTexture, backBtn, Color.White);
+                            break;
+                        case 2: // credits
+                            _spriteBatch.Draw(backTexture, backBtn, Color.White);
+                            break;
+                    }
+
                     break;
                 case Screen.Game:
                     // background? no
