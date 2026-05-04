@@ -17,7 +17,7 @@ namespace Breakout
         private Rectangle _rectangle;
         private Color _color;
         private Vector2 _speed;
-        private int ballResets, ballLives, score;
+        private int ballResets, ballLives, bricksScore, score;
         private bool didBallFall, hitBrick;
 
 
@@ -58,6 +58,11 @@ namespace Breakout
         public int Score
         {
             get { return score; }
+        }
+
+        public int BricksRemoved
+        {
+            get { return bricksScore; }
         }
 
         public void BallState(Rectangle window, Paddle paddle, List<Brick> bricks, KeyboardState keyboardState)
@@ -137,6 +142,7 @@ namespace Breakout
                     hitBrick = true;
                     bricks.RemoveAt(i);
                     score += 50;
+                    bricksScore++;
                     i--;
                 }
             }

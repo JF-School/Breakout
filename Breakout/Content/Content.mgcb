@@ -13,8 +13,22 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Fonts/EndScoreFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/EndScoreFont.spritefont
+
 #begin Fonts/Pix32.ttf
 /copy:Fonts/Pix32.ttf
+
+#begin Fonts/RoundFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/RoundFont.spritefont
 
 #begin Fonts/ScoreFont.spritefont
 /importer:FontDescriptionImporter
@@ -22,6 +36,13 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:Fonts/ScoreFont.spritefont
+
+#begin Fonts/TotalScoreFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/TotalScoreFont.spritefont
 
 #begin Images/atariBackground.jpg
 /importer:TextureImporter
@@ -95,6 +116,30 @@
 /processorParam:TextureFormat=Color
 /build:Images/creditsbutton.png
 
+#begin Images/endscreen.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/endscreen.png
+
+#begin Images/growbutton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/growbutton.png
+
 #begin Images/howbutton.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -130,6 +175,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/leavebutton.png
+
+#begin Images/nothingburger.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/nothingburger.png
 
 #begin Images/paddle.png
 /importer:TextureImporter

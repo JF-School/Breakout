@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 //using System.Numerics;
@@ -27,18 +29,23 @@ namespace Breakout
         MouseState mouseState, prevMouseState;
         KeyboardState keyboardState, prevKeyboardState;
 
-        Texture2D ballTexture, paddleTexture, brickTexture, introBack;
-        Texture2D logoTexture, howTexture, playTexture, creditsTexture, backTexture, instructTexture;
+        Texture2D ballTexture, paddleTexture, brickTexture, introBack, endBack;
+        Texture2D logoTexture, leaveTexture, howTexture, playTexture, creditsTexture, backTexture, 
+            instructTexture, nothingTexture;
         Rectangle logoRect, howBtn, playBtn, creditsBtn, backBtn;
-        SpriteFont ScoreFont;
+        SpriteFont ScoreFont, RoundFont, EndScoreFont, TotalScoreFont;
         Rectangle paddleRectLeft, paddleRectCenter, paddleRectRight, ballHitbox;
         int padLeft, padRight, padCenter;
+
+        SoundEffect bounce;
+        SoundEffectInstance bounceInstance;
 
         Paddle paddle;
         List<Brick> bricks;
         Ball ball;
 
         int round, tab;
+        float timer;
         bool gameEnd;
         bool hitboxes;
 
@@ -62,6 +69,8 @@ namespace Breakout
             tab = 0; // tab = 1 = how to play, tab = 2 = credits
             gameEnd = false;
             hitboxes = false;
+
+            timer = 0f;
 
             // TODO: Add your initialization logic here
 
@@ -102,16 +111,26 @@ namespace Breakout
             introBack = Content.Load<Texture2D>("Images/atariBackground");
             logoTexture = Content.Load<Texture2D>("Images/breakoutLogo");
             playTexture = Content.Load<Texture2D>("Images/playbutton");
+            leaveTexture = Content.Load<Texture2D>("Images/leavebutton");
             howTexture = Content.Load<Texture2D>("Images/howbutton");
             creditsTexture = Content.Load<Texture2D>("Images/creditsbutton");
             backTexture = Content.Load<Texture2D>("Images/backbutton");
             instructTexture = Content.Load<Texture2D>("Images/howtoplay");
+            nothingTexture = Content.Load<Texture2D>("Images/nothingburger");
 
             // game screen
             paddleTexture = Content.Load<Texture2D>("Images/paddle");
             brickTexture = Content.Load<Texture2D>("Images/brick");
             ballTexture = Content.Load<Texture2D>("Images/ball");
+
+            // end screen
+            endBack = Content.Load<Texture2D>("Images/endscreen");
+
+            // fonts
             ScoreFont = Content.Load<SpriteFont>("Fonts/ScoreFont");
+            EndScoreFont = Content.Load<SpriteFont>("Fonts/EndScoreFont");
+            TotalScoreFont = Content.Load<SpriteFont>("Fonts/TotalScoreFont");
+            RoundFont = Content.Load<SpriteFont>("Fonts/RoundFont");
         }
 
         protected override void Update(GameTime gameTime)
@@ -140,6 +159,7 @@ namespace Breakout
                     break;
                 case Screen.Game:
                     // idk
+                    timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
                     ball.BallState(window, paddle, bricks, keyboardState);
                     paddle.Update(keyboardState, window);
                     if (keyboardState.IsKeyDown(Keys.LeftAlt) && prevKeyboardState.IsKeyUp(Keys.LeftAlt))
@@ -153,7 +173,7 @@ namespace Breakout
                         screen = Screen.End;
                     break;
                 case Screen.End:
-                    // also buttons
+                    //this.Window.Title = $"x = {mouseState.X}, y = {mouseState.Y}";
                     break;
             }
 
@@ -188,7 +208,6 @@ namespace Breakout
                     break;
             }
 
-
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -219,6 +238,7 @@ namespace Breakout
                             _spriteBatch.Draw(backTexture, backBtn, Color.White);
                             break;
                         case 2: // credits
+                            _spriteBatch.Draw(nothingTexture, window, Color.White);
                             _spriteBatch.Draw(backTexture, backBtn, Color.White);
                             break;
                     }
@@ -247,6 +267,11 @@ namespace Breakout
                     break;
                 case Screen.End:
                     // don't forget this area
+                    _spriteBatch.Draw(endBack, window, Color.White);
+                    _spriteBatch.DrawString(RoundFont, $"{round}", new Vector2(420, 85), Color.Red);
+                    _spriteBatch.DrawString(TotalScoreFont, $"{Math.Round(timer, 0)}s", new Vector2(135, 155), Color.Black);
+                    _spriteBatch.DrawString(EndScoreFont, $"{ball.BricksRemoved}", new Vector2(540, 155), Color.Black);
+                    _spriteBatch.DrawString(TotalScoreFont, $"{ball.Score}", new Vector2(310, 310), Color.Black);
                     break;
             }
             _spriteBatch.End();
