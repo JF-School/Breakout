@@ -31,8 +31,8 @@ namespace Breakout
 
         Texture2D ballTexture, paddleTexture, brickTexture, introBack, endBack;
         Texture2D logoTexture, leaveTexture, howTexture, playTexture, creditsTexture, backTexture, 
-            instructTexture, nothingTexture;
-        Rectangle logoRect, howBtn, playBtn, creditsBtn, backBtn;
+            instructTexture, nothingTexture, growTexture;
+        Rectangle logoRect, howBtn, playBtn, creditsBtn, backBtn, growBtn;
         SpriteFont ScoreFont, RoundFont, EndScoreFont, TotalScoreFont;
         Rectangle paddleRectLeft, paddleRectCenter, paddleRectRight, ballHitbox;
         int padLeft, padRight, padCenter;
@@ -45,6 +45,7 @@ namespace Breakout
         Ball ball;
 
         int round, tab;
+        bool codeInput, growShow;
         float timer;
         bool gameEnd;
         bool hitboxes;
@@ -69,6 +70,7 @@ namespace Breakout
             tab = 0; // tab = 1 = how to play, tab = 2 = credits
             gameEnd = false;
             hitboxes = false;
+            codeInput = false;
 
             timer = 0f;
 
@@ -87,7 +89,6 @@ namespace Breakout
             paddleRectRight = new Rectangle(343, 400, 38, 23);
             // ball size (25, 25) // 368, 350
             ball = new Ball(ballTexture, new Rectangle(paddle.Rect.Center.X, paddle.Rect.Y - 50, 25, 25), new Vector2(2, 2), Color.White);
-
             ballHitbox = new Rectangle(368, 350, 25, 25);
             // what's the brick size (90, 40)
             bricks = new List<Brick>();
@@ -95,6 +96,7 @@ namespace Breakout
 
             logoRect = new Rectangle(200, 25, 400, 160);
             playBtn = new Rectangle(350, 200, 100, 100);
+            growBtn = new Rectangle(350, 300, 100, 100);
             howBtn = new Rectangle(460, 200, 100, 100);
             creditsBtn = new Rectangle(240, 200, 100, 100);
             backBtn = new Rectangle(10, 10, 50, 50);
@@ -117,6 +119,7 @@ namespace Breakout
             backTexture = Content.Load<Texture2D>("Images/backbutton");
             instructTexture = Content.Load<Texture2D>("Images/howtoplay");
             nothingTexture = Content.Load<Texture2D>("Images/nothingburger");
+            growTexture = Content.Load<Texture2D>("Images/growbutton");
 
             // game screen
             paddleTexture = Content.Load<Texture2D>("Images/paddle");
@@ -145,16 +148,37 @@ namespace Breakout
             {
                 case Screen.Intro:
                     // buttons
-                    if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
+                    switch (tab)
                     {
-                        if (playBtn.Contains(mouseState.Position) && tab == 0)
-                            screen = Screen.Game;
-                        if (howBtn.Contains(mouseState.Position) && tab == 0)
-                            tab = 1;
-                        if (creditsBtn.Contains(mouseState.Position) && tab == 0)
-                            tab = 2;
-                        if (backBtn.Contains(mouseState.Position) && tab != 0)
-                            tab = 0;
+                        case 0:
+                            if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
+                            {
+                                if (playBtn.Contains(mouseState.Position))
+                                    screen = Screen.Game;
+                                if (howBtn.Contains(mouseState.Position))
+                                    tab = 1;
+                                if (creditsBtn.Contains(mouseState.Position))
+                                    tab = 2;
+                            }
+                            break;
+                        case 1:
+                            if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
+                                if (backBtn.Contains(mouseState.Position))
+                                    tab = 0;
+                            break;
+                        case 2:
+                            if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
+                                if (backBtn.Contains(mouseState.Position))
+                                    tab = 0;
+                            if (keyboardState.IsKeyDown(Keys.LeftControl) && keyboardState.IsKeyDown(Keys.G))
+                                growShow = true;
+                            if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
+                                if (growBtn.Contains(mouseState.Position))
+                                {
+                                    codeInput = true;
+                                }
+
+                            break;
                     }
                     break;
                 case Screen.Game:
@@ -183,8 +207,18 @@ namespace Breakout
             switch (screen)
             {
                 case Screen.Intro:
+                    if (!growShow)
+                        codeInput = false;
                     break;
                 case Screen.Game:
+                    if (codeInput)
+                    {
+                        ball.Size = 50;
+                    }
+                    else
+                    {
+                        ball.Size = 25;
+                    }
                     if (bricks.Count == 0)
                     {
                         ball.BallBool = true; ;
@@ -240,6 +274,8 @@ namespace Breakout
                         case 2: // credits
                             _spriteBatch.Draw(nothingTexture, window, Color.White);
                             _spriteBatch.Draw(backTexture, backBtn, Color.White);
+                            if (growShow)
+                                _spriteBatch.Draw(growTexture, growBtn, Color.White);
                             break;
                     }
 
@@ -270,7 +306,7 @@ namespace Breakout
                     _spriteBatch.Draw(endBack, window, Color.White);
                     _spriteBatch.DrawString(RoundFont, $"{round}", new Vector2(420, 85), Color.Red);
                     _spriteBatch.DrawString(TotalScoreFont, $"{Math.Round(timer, 0)}s", new Vector2(135, 155), Color.Black);
-                    _spriteBatch.DrawString(EndScoreFont, $"{ball.BricksRemoved}", new Vector2(540, 155), Color.Black);
+                    _spriteBatch.DrawString(EndScoreFont, $"{ball.Score / 50}", new Vector2(540, 155), Color.Black);
                     _spriteBatch.DrawString(TotalScoreFont, $"{ball.Score}", new Vector2(310, 310), Color.Black);
                     break;
             }

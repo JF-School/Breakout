@@ -48,6 +48,11 @@ namespace Breakout
             get { return didBallFall; }
             set { didBallFall = value; }
         }
+
+        public bool BallBrickHit
+        {
+            get { return hitBrick; }
+        }
         
         public int Lives
         {
@@ -228,6 +233,16 @@ namespace Breakout
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, _rectangle, Color.White);
+        }
+
+        public int Size
+        {
+            get { return _rectangle.Width; }
+            set 
+            { 
+                _rectangle.Width = value;
+                _rectangle.Height = value;
+            }
         }
 
     }
