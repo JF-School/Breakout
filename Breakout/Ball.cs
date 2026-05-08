@@ -17,8 +17,8 @@ namespace Breakout
         private Rectangle _rectangle;
         private Color _color;
         private Vector2 _speed;
-        private int ballResets, ballLives, bricksScore, score;
-        private bool didBallFall, hitBrick;
+        private int _ballLives, _bricksScore, _score;
+        private bool _didBallFall, _hitBrick;
 
 
         public Ball(Texture2D texture, Rectangle rectangle, Vector2 speed, Color color)
@@ -27,9 +27,9 @@ namespace Breakout
             _rectangle = rectangle;
             _speed = speed;
             _color = color;
-            ballLives = 3;
-            didBallFall = true;
-            hitBrick = false;
+            _ballLives = 3;
+            _didBallFall = true;
+            _hitBrick = false;
         }
 
         public Rectangle Rect
@@ -45,29 +45,29 @@ namespace Breakout
 
         public bool BallBool
         {
-            get { return didBallFall; }
-            set { didBallFall = value; }
+            get { return _didBallFall; }
+            set { _didBallFall = value; }
         }
 
         public bool BallBrickHit
         {
-            get { return hitBrick; }
+            get { return _hitBrick; }
         }
         
         public int Lives
         {
-            get { return ballLives; }
-            set { ballLives = value;}
+            get { return _ballLives; }
+            set { _ballLives = value;}
         }
 
         public int Score
         {
-            get { return score; }
+            get { return _score; }
         }
 
         public int BricksRemoved
         {
-            get { return bricksScore; }
+            get { return _bricksScore; }
         }
 
         public void BallState(Rectangle window, Paddle paddle, List<Brick> bricks, KeyboardState keyboardState)
@@ -81,7 +81,7 @@ namespace Breakout
             //    BallMovement(window, paddle, bricks);
             //} while (didBallFall == false);
 
-            if (didBallFall)
+            if (_didBallFall)
                 BallLaunch(keyboardState, paddle);
             else
                 BallMovement(window, paddle, bricks);
@@ -95,7 +95,7 @@ namespace Breakout
 
         public void BallLaunch(KeyboardState keyboardState, Paddle paddle)
         {
-            if (didBallFall)
+            if (_didBallFall)
             {
                 ResetLocation(paddle);
                 _speed.X *= 0;
@@ -106,7 +106,7 @@ namespace Breakout
                     _rectangle.Y -= (int)_speed.Y;
                     //_speed.X = -3;
                     _speed.Y = -5;
-                    didBallFall = false;
+                    _didBallFall = false;
                 }
             }
         }
@@ -139,19 +139,19 @@ namespace Breakout
             //}
 
             // Hitting a brick(s)
-            hitBrick = false;
+            _hitBrick = false;
             for (int i = 0; i < bricks.Count; i++)
             {
                 if (_rectangle.Intersects(bricks[i].Rect))
                 {
-                    hitBrick = true;
+                    _hitBrick = true;
                     bricks.RemoveAt(i);
-                    score += 50;
-                    bricksScore++;
+                    _score += 50;
+                    _bricksScore++;
                     i--;
                 }
             }
-            if (hitBrick)
+            if (_hitBrick)
             {
                 _speed.X *= -1;
             }
@@ -169,26 +169,26 @@ namespace Breakout
                 _speed.Y *= -1;
             }
             // falls out of window
-            if (_rectangle.Bottom > window.Height && ballLives != 0)
+            if (_rectangle.Bottom > window.Height && _ballLives != 0)
             {
-                didBallFall = true;
-                ballLives--;
+                _didBallFall = true;
+                _ballLives--;
             }
 
             // more bricks
-            hitBrick = false;
+            _hitBrick = false;
             for (int i = 0; i < bricks.Count; i++)
             {
                 if (_rectangle.Intersects(bricks[i].Rect))
                 {
-                    hitBrick = true;
-                    score += 50;
+                    _hitBrick = true;
+                    _score += 50;
                     bricks.RemoveAt(i);
                     i--;
                 }
                 
             }
-            if (hitBrick)
+            if (_hitBrick)
             {
                 _speed.Y *= -1;
             }
