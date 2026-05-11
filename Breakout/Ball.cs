@@ -72,15 +72,6 @@ namespace Breakout
 
         public void BallState(Rectangle window, Paddle paddle, List<Brick> bricks, KeyboardState keyboardState)
         {
-            //do
-            //{
-            //    BallLaunch(keyboardState, paddle);
-            //} while (didBallFall == true);
-            //do
-            //{
-            //    BallMovement(window, paddle, bricks);
-            //} while (didBallFall == false);
-
             if (_didBallFall)
                 BallLaunch(keyboardState, paddle);
             else

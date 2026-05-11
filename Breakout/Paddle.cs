@@ -49,7 +49,7 @@ namespace Breakout
             if (_rectangle.Right > window.Width)
                 _rectangle.X = (window.Width - _rectangle.Width);
             if (_rectangle.Left < 0)
-                _rectangle.X = 0;
+                _rectangle.X = _rectangle.Width;
             _rectangle.Offset(_speed);
         }
 
