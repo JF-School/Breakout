@@ -30,11 +30,6 @@ namespace Breakout
             get { return _rectangle; }
         }
 
-        public Vector2 Speed
-        {
-            get { return _speed; }
-        }
-
         public void Update(KeyboardState keyboardState, Rectangle window)
         {
             keyboardState = Keyboard.GetState();
@@ -49,7 +44,7 @@ namespace Breakout
             if (_rectangle.Right > window.Width)
                 _rectangle.X = (window.Width - _rectangle.Width);
             if (_rectangle.Left < 0)
-                _rectangle.X = _rectangle.Width;
+                _rectangle.X = 1;
             _rectangle.Offset(_speed);
         }
 

@@ -212,3 +212,9 @@
 /processorParam:TextureFormat=Color
 /build:Images/playbutton.png
 
+#begin Sounds/bumpyroad.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/bumpyroad.wav
+

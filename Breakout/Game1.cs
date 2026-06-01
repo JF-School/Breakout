@@ -126,6 +126,10 @@ namespace Breakout
             brickTexture = Content.Load<Texture2D>("Images/brick");
             ballTexture = Content.Load<Texture2D>("Images/ball");
 
+            // sound effects
+            bounce = Content.Load<SoundEffect>("Sounds/bumpyroad");
+            bounceInstance = bounce.CreateInstance();
+
             // end screen
             endBack = Content.Load<Texture2D>("Images/endscreen");
 
@@ -184,7 +188,7 @@ namespace Breakout
                 case Screen.Game:
                     // idk
                     timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    ball.BallState(window, paddle, bricks, keyboardState);
+                    ball.BallState(window, paddle, bounceInstance, bricks, keyboardState);
                     paddle.Update(keyboardState, window);
                     if (keyboardState.IsKeyDown(Keys.LeftAlt) && prevKeyboardState.IsKeyUp(Keys.LeftAlt))
                     {

@@ -30,16 +30,6 @@ namespace Breakout
             get { return _rectangle; }
         }
 
-        public Color Color
-        {
-            get { return _color; }
-        }
-
-        public void Update(List<Brick> bricks, Ball ball)
-        {
-            
-        }
-
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, _rectangle, _color * _opacity);
