@@ -56,12 +56,12 @@ namespace Breakout
             get { return _score; }
         }
 
-        public void BallState(Rectangle window, Paddle paddle, SoundEffectInstance bounceInstance, List<Brick> bricks, KeyboardState keyboardState)
+        public void BallState(Rectangle window, Paddle paddle, SoundEffect bounce, List<Brick> bricks, KeyboardState keyboardState)
         {
             if (_didBallFall)
                 BallLaunch(keyboardState, paddle);
             else
-                BallMovement(window, paddle, bounceInstance, bricks);
+                BallMovement(window, paddle, bounce, bricks);
         }
 
         public void ResetLocation(Paddle paddle)
@@ -89,7 +89,7 @@ namespace Breakout
         }
 
         // add List<Brick> bricks
-        public void BallMovement(Rectangle window, Paddle paddle, SoundEffectInstance bounceInstance, List<Brick> bricks)
+        public void BallMovement(Rectangle window, Paddle paddle, SoundEffect bounce, List<Brick> bricks)
         {
 
             //_rectangle.Offset(_speed);
@@ -99,13 +99,13 @@ namespace Breakout
             // Keep in window
             if (_rectangle.Right > window.Width || _rectangle.Left < 0)
             {
-                bounceInstance.Play();
+                bounce.Play();
                 _rectangle.X -= (int)_speed.X;
                 _speed.X *= -1;
             }
             if (_rectangle.Right > window.Width + 1 || _rectangle.Left < -1)
             {
-                bounceInstance.Play();
+                bounce.Play();
                 ResetLocation(paddle);
             }
 
@@ -123,7 +123,7 @@ namespace Breakout
             {
                 if (_rectangle.Intersects(bricks[i].Rect))
                 {
-                    bounceInstance.Play();
+                    bounce.Play();
                     _hitBrick = true;
                     bricks.RemoveAt(i);
                     _score += 50;
@@ -145,7 +145,7 @@ namespace Breakout
             // Keep on screen
             if (_rectangle.Top < 0)
             {
-                bounceInstance.Play();
+                bounce.Play();
                 _rectangle.Y -= (int)_speed.Y;
                 _speed.Y *= -1;
             }
@@ -162,7 +162,7 @@ namespace Breakout
             {
                 if (_rectangle.Intersects(bricks[i].Rect))
                 {
-                    bounceInstance.Play();
+                    bounce.Play();
                     _hitBrick = true;
                     _score += 50;
                     bricks.RemoveAt(i);
@@ -183,7 +183,7 @@ namespace Breakout
                 int paddleRight = (paddle.Rect.Center.X + paddle.Rect.Right) / 2;
                 if (_rectangle.Center.X < paddleLeft)
                 {
-                    bounceInstance.Play();
+                    bounce.Play();
                     _rectangle.X -= (int)_speed.X;
                     _rectangle.Y -= (int)_speed.Y;
                     _speed.X = -3;
@@ -191,7 +191,7 @@ namespace Breakout
                 }
                 if (_rectangle.Center.X > paddleLeft || _rectangle.Center.X < paddleRight)
                 {
-                    bounceInstance.Play();
+                    bounce.Play();
                     _rectangle.X -= (int)_speed.X;
                     _rectangle.Y -= (int)_speed.Y;
                     _speed.X = -3;
@@ -199,7 +199,7 @@ namespace Breakout
                 }
                 if (_rectangle.Center.X > paddleRight)
                 {
-                    bounceInstance.Play();
+                    bounce.Play();
                     _rectangle.X -= (int)_speed.X;
                     _rectangle.Y -= (int)_speed.Y;
                     _speed.X = 4;

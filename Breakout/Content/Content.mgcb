@@ -218,3 +218,15 @@
 /processorParam:Quality=Best
 /build:Sounds/bumpyroad.wav
 
+#begin Sounds/killingtime.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/killingtime.wav
+
+#begin Sounds/wallpaper.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/wallpaper.wav
+

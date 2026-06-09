@@ -37,8 +37,8 @@ namespace Breakout
         Rectangle paddleRectLeft, paddleRectCenter, paddleRectRight, ballHitbox;
         int padLeft, padRight, padCenter;
 
-        SoundEffect bounce;
-        SoundEffectInstance bounceInstance;
+        SoundEffect bounce, gameMusic, introMusic;
+        SoundEffectInstance gameMusicInstance, introMusicInstance;
 
         Paddle paddle;
         List<Brick> bricks;
@@ -128,7 +128,10 @@ namespace Breakout
 
             // sound effects
             bounce = Content.Load<SoundEffect>("Sounds/bumpyroad");
-            bounceInstance = bounce.CreateInstance();
+            gameMusic = Content.Load<SoundEffect>("Sounds/wallpaper");
+            gameMusicInstance = gameMusic.CreateInstance();
+            introMusic = Content.Load<SoundEffect>("Sounds/killingtime");
+            introMusicInstance = introMusic.CreateInstance();
 
             // end screen
             endBack = Content.Load<Texture2D>("Images/endscreen");
@@ -152,6 +155,7 @@ namespace Breakout
             {
                 case Screen.Intro:
                     // buttons
+                    introMusicInstance.Play();
                     switch (tab)
                     {
                         case 0:
@@ -187,8 +191,10 @@ namespace Breakout
                     break;
                 case Screen.Game:
                     // idk
+                    introMusicInstance.Stop();
+                    gameMusicInstance.Play();
                     timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    ball.BallState(window, paddle, bounceInstance, bricks, keyboardState);
+                    ball.BallState(window, paddle, bounce, bricks, keyboardState);
                     paddle.Update(keyboardState, window);
                     if (keyboardState.IsKeyDown(Keys.LeftAlt) && prevKeyboardState.IsKeyUp(Keys.LeftAlt))
                     {
@@ -228,7 +234,6 @@ namespace Breakout
                         ball.BallBool = true; ;
                         GenerateBricks();
                         round++;
-                        ball.Lives++;
                     }
                     if (ball.Lives == 0)
                         screen = Screen.End;
