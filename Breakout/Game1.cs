@@ -155,6 +155,7 @@ namespace Breakout
             {
                 case Screen.Intro:
                     // buttons
+                    introMusicInstance.Volume = 0.5f;
                     introMusicInstance.Play();
                     switch (tab)
                     {
@@ -192,6 +193,7 @@ namespace Breakout
                 case Screen.Game:
                     // idk
                     introMusicInstance.Stop();
+                    gameMusicInstance.Volume = 0.5f;
                     gameMusicInstance.Play();
                     timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
                     ball.BallState(window, paddle, bounce, bricks, keyboardState);
